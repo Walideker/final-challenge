@@ -10,16 +10,18 @@ export default function sign() {
     const [password, setPassword] = useState()
     const navigate = useNavigate()
     const handleSubmit = (e) => {
-        e.preventDefault()
+        e.preventDefault();
+        console.log('Submitting with email:', email, 'and password:', password);
         axios.post('http://localhost:3000/login', { email, password })
             .then(res => {
-                console.log(res)
+                console.log('Response:', res.data);
                 if (res.data === 'success') {
-                    navigate('/home')
+                    navigate('/home');
                 }
             })
-            .catch(err => console.log(err))
-    }
+            .catch(err => console.log(err));
+    };
+    
     return (
         <div className="container mt-5">
             <h2>Registration Form</h2>

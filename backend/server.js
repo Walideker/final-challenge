@@ -3,14 +3,20 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const cors = require('cors');
 const { EmployeModel } = require('./models/employe');
+const { ItemsModel } = require('./models/recipeModel');
 
 const app = express();
 
 app.use(express.json());
 app.use(cors());
 
-mongoose.connect('mongodb://127.0.0.1:27017/bikiniDb');
-
+mongoose.connect('mongodb://127.0.0.1:27017/bikiniDb')
+    .then(() => {
+        console.log('MongoDB Connected!');
+    })
+    .catch((error) => {
+        console.error('MongoDB Connection Error:', error);
+    });
 
 app.post('/login', async (req, res) => {
     try {
@@ -27,10 +33,12 @@ app.post('/login', async (req, res) => {
             res.json('record does not exist');
         }
     } catch (error) {
-        console.error(error);
+        console.error('Error during login:', error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
+
+
 
 
 
@@ -45,6 +53,15 @@ app.post('/register', async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
+
+app.get('/getItems', (req, res) => {
+    ItemsModel.find()
+        .then(items => res.json(items))
+        .catch(err => console.log(err));
+});
+
+
+
 
 
 const PORT = process.env.PORT || 3000;
