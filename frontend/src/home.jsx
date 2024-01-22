@@ -1,20 +1,24 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
   const [items, setItems] = useState([]);
 
+  const logout = () => {
+    window.location.href = '/login';
+  }
+
   useEffect(() => {
     axios.get('http://localhost:3000/getItems')
       .then(response => {
         setItems(response.data);
-        console.log(response.data); // Add this line for debugging
+        console.log('Items from server:', response.data);
       })
-      .catch(err => console.log(err));
+      .catch(err => console.log('Error fetching items:', err));
   }, []);
 
-  console.log(items); // Add this line for debugging
+  console.log('Items in state:', items);
 
   return (
     <div className="container mt-5 text-center">
@@ -22,10 +26,10 @@ function App() {
       <table className="table table-striped mt-5">
         <thead>
           <tr>
-            <th scope="col">#</th>
+            <th scope="col"></th>
             <th scope="col">Name</th>
             <th scope="col">Price</th>
-            <th scope="col">Ingredients</th> {/* Add this line for ingredients */}
+            <th scope="col">Ingredients</th>
           </tr>
         </thead>
         <tbody>
@@ -35,18 +39,13 @@ function App() {
               <td>{item.name}</td>
               <td>{item.price}</td>
               <td>
-                {item.ingredients && item.ingredients.length > 0 ? (
-                  <ul>
-                    {item.ingredients.map((ingredient, index) => (
-                      <li key={index}>{ingredient}</li>
-                    ))}
-                  </ul>
-                ) : null}
+                {item.ingredients && item.ingredients.length > 0 ? item.ingredients.join(', ') : 'N/A'}
               </td>
             </tr>
           ))}
         </tbody>
       </table>
+      <button className='btn btn-danger mt-5' onClick={logout}>Logout</button>
     </div>
   );
 }
